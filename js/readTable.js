@@ -38,18 +38,14 @@ function criarTabela(dadosCSV,nome) {
 }
 
 function lerArquivos() {
-  fetch('/documents/')
+  fetch('/documents/documentsList.txt')
     .then(response => response.text())
     .then(data => {
-      // aqui você pode chamar uma função para criar a tabela
-      const parser = new DOMParser();
-      const htmlDocument = parser.parseFromString(data, 'text/html');
-      const links = htmlDocument.querySelectorAll('a'); // Obtém todos os elementos <a> na página
-
-      links.forEach((link) => {
-        var linkText = link.textContent; // Obtém o texto dentro da tag <a>
-        if(linkText.includes('.csv')){
-            lerArquivoCSV(linkText)
+      var listDoculents = data.trim().split('\n');
+      listDoculents.forEach((document) => {
+        var fileName = document
+        if(fileName.includes('.csv')){
+            lerArquivoCSV(fileName.trim())
         }
       });
     });
