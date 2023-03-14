@@ -1,23 +1,19 @@
-(function ($) {
-    lerArquivoCSV()
-})
-
-function lerArquivoCSV() {
-  fetch('/documents/tabela.csv')
+function lerArquivoCSV(nome) {
+  fetch('/documents/'+nome)
     .then(response => response.text())
     .then(data => {
       // aqui você pode chamar uma função para criar a tabela
-      criarTabela(data);
+      criarTabela(data,nome);
     });
 }
 
-function criarTabela(dadosCSV) {
+function criarTabela(dadosCSV,nome) {
   // quebra a string em linhas e colunas
   const linhas = dadosCSV.trim().split('\n');
   const colunas = linhas[0].split(',');
 
   // cria a tabela HTML
-  const tabela = document.getElementById('_table');
+  const tabela = document.getElementById(nome.replace('.csv',''));
   tabela.innerHTML = '';
 
   // adiciona os cabeçalhos da tabela
@@ -41,4 +37,22 @@ function criarTabela(dadosCSV) {
   }
 }
 
-window.addEventListener('load', lerArquivoCSV);
+function lerArquivos() {
+  fetch('/documents/')
+    .then(response => response.text())
+    .then(data => {
+      // aqui você pode chamar uma função para criar a tabela
+      const parser = new DOMParser();
+      const htmlDocument = parser.parseFromString(data, 'text/html');
+      const links = htmlDocument.querySelectorAll('a'); // Obtém todos os elementos <a> na página
+
+      links.forEach((link) => {
+        var linkText = link.textContent; // Obtém o texto dentro da tag <a>
+        if(linkText.includes('.csv')){
+            lerArquivoCSV(linkText)
+        }
+      });
+    });
+}
+
+window.addEventListener('load', lerArquivos);
