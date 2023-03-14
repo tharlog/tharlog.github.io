@@ -3,7 +3,7 @@
 })
 
 function lerArquivoCSV() {
-  fetch('tharlog.github.io/documents/tabela.csv')
+  fetch('/documents/tabela.csv')
     .then(response => response.text())
     .then(data => {
       // aqui você pode chamar uma função para criar a tabela
